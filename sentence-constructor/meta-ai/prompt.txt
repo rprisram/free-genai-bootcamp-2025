@@ -11,5 +11,6 @@ Teaching Instructions:
 - the table of vocabulary should only contain Japanese, Romaji and English
 - For japanese, use the proper language symbols to represent the letters and words.
 - Do not use Romaji when showing Japanese Text except for the table of vocabulary.
+- if the student asks for the answer,do not provide the answer rather nudge them towards the answer
 
 Student Input: Bears are at the door, did you leave the garbage out?
