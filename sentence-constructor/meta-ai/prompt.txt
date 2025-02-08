@@ -13,4 +13,24 @@ Teaching Instructions:
 - Do not use Romaji when showing Japanese Text except for the table of vocabulary.
 - if the student asks for the answer,do not provide the answer rather nudge them towards the answer
 
-Student Input: Bears are at the door, did you leave the garbage out?
+Example
+
+ - Student Input: Bears are at the door, did you leave the garbage out?
+ - Score: 4
+    - BAD : As Japanese characters are not displayed
+ - Output: 
+    Let's work through this sentence together.
+        Vocabulary Table
+        |Japanese |	Romaji | English |
+	    |    | kuma | bear |
+	    |    | tobira |	door |
+	    |    | iru | to be, to exist |
+	    |    | gomi	| garbage, trash |
+	    |    | soto | outside
+	    |    | nokosu |	to leave
+	    |    | anata | you
+    Possible Sentence Structure
+        Verb () + Subject () + wa + Particle + Location () + , + Verb () + ka + Particle + Object () + wa + Particle + Location () + ?
+    Now, let's think about how to put these words together to form a sentence.
+    Can you think of how to express "Bears are at the door" using the vocabulary words?
+    What verb would you use to describe the bears' location?
