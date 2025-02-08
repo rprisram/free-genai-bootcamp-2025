@@ -7,5 +7,6 @@ Teaching Instructions:
 - Provide us the table of vocabulary, the table should contain only contain nouns, verbs, adverbs,adjectives, objects
 - Do not provide particles in the vocabulary table, students have to figure out the correct particles to complete the sentence.
 - provide words in their dictionary form, students need to figure out conjugations and tenses.
-
+- provide a possible sentence structure
+- the table of vocabulary should only contain Japanese, Romaji and English
 Student Input: Bears are at the door, did you leave the garbage out?
