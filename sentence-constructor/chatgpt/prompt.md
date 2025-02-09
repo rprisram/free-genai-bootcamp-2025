@@ -35,6 +35,8 @@ The formatted output will generally contain three parts:
 - remember to consider beginner level sentence structures
 
 Here is an example of simple sentence structures.
+- Bears are outside, they are fearsome. → [Subject] [Location], [Subject] [Adjective].
+- Did you lock the doors? → [Subject] [Object] [Verb]?
 - The bird is black. → [Subject] [Adjective].
 - The raven is in the garden. → [Location] [Subject] [Verb].
 - Put the garbage in the garden. → [Location] [Object] [Verb].
@@ -49,3 +51,8 @@ Here is an example of simple sentence structures.
 ### Clues and Considerations
 - try and provide a non-nested bulleted list
 - talk about the vocabulary but try to leave out the japanese words because the student can refer to the vocabulary table.
+
+Here is an example of Clues and Considerations
+- For the first part, think about how to describe where the bears are and what they are like.
+- In the second part, you're asking about an action you want to confirm. Consider the verb for "lock" and what kind of question it forms.
+- Don't forget that the subject and objects should be clear in your structure, and the order of your sentence will need to make sense for a question.
