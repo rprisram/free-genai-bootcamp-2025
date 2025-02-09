@@ -56,3 +56,5 @@ Here is an example of Clues and Considerations
 - For the first part, think about how to describe where the bears are and what they are like.
 - In the second part, you're asking about an action you want to confirm. Consider the verb for "lock" and what kind of question it forms.
 - Don't forget that the subject and objects should be clear in your structure, and the order of your sentence will need to make sense for a question.
+
+Student Input: Did you see the raven this morning? They were looking at our garden.
