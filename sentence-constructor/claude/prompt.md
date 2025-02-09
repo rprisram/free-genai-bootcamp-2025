@@ -14,6 +14,7 @@ Beginner, JLPT5
 - provide a possible sentence structure
 - Do not use romaji when showing japanese except in the table of vocabulary.
 - when the student makes attempt, interpet their reading so they can see what that actually said
+- Tell us at the start of each output what state we are in.
 
 ## Agent Flow
 The following agent has the following states
