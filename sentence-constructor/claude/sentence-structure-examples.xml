@@ -1,61 +1,159 @@
-<sentenceExamples>
- <example>
-   <english>Bears are outside, they are fearsome.</english>
-   <pattern>[Subject] [Location], [Subject] [Adjective]</pattern>
- </example>
+<?xml version="1.0" encoding="UTF-8"?>
+<teachingExamples>
+    <bestPractices>
+        <vocabularyTable>
+            <rule>Show only dictionary forms</rule>
+            <rule>Include kanji with furigana</rule>
+            <rule>Omit particles and grammar points</rule>
+            <rule>List only essential vocabulary</rule>
+        </vocabularyTable>
+        
+        <sentenceStructure>
+            <rule>Use abstract placeholders</rule>
+            <rule>Avoid showing conjugations</rule>
+            <rule>Show logical word order</rule>
+            <rule>Indicate question marks where needed</rule>
+        </sentenceStructure>
+        
+        <considerations>
+            <rule>Focus on key grammatical points</rule>
+            <rule>Highlight important structural elements</rule>
+            <rule>Mention relevant conjugation needs</rule>
+            <rule>Point out potential challenges</rule>
+        </considerations>
+        
+        <nextSteps>
+            <rule>Clear, actionable options</rule>
+            <rule>Focus on specific grammar points</rule>
+            <rule>Progressive difficulty levels</rule>
+            <rule>Encourage student engagement</rule>
+        </nextSteps>
+    </bestPractices>
 
- <example>
-   <english>Did you lock the doors?</english>
-   <pattern>[Subject] [Object] [Verb]?</pattern>
- </example>
+    <examples>
+        <example>
+            <english>The cat is on the table.</english>
+            <response>
+                <state>Setup</state>
+                <vocabulary>
+                    <word>
+                        <japanese>猫 (ねこ)</japanese>
+                        <romaji>neko</romaji>
+                        <english>cat</english>
+                    </word>
+                    <word>
+                        <japanese>テーブル</japanese>
+                        <romaji>teeburu</romaji>
+                        <english>table</english>
+                    </word>
+                    <word>
+                        <japanese>いる</japanese>
+                        <romaji>iru</romaji>
+                        <english>to be (animate)</english>
+                    </word>
+                </vocabulary>
+                <sentenceStructure>[Location] [Subject] [Verb]</sentenceStructure>
+                <considerations>
+                    <point>This describes the location of a living thing</point>
+                    <point>The sentence requires a location marker</point>
+                    <point>We need to choose between いる and ある based on the subject</point>
+                </considerations>
+                <nextSteps>
+                    <step>attempt an answer</step>
+                    <step>ask about location particles</step>
+                    <step>ask about existence verbs</step>
+                    <step>ask about present tense formation</step>
+                </nextSteps>
+            </response>
+        </example>
 
- <example>
-   <english>The bird is black.</english>
-   <pattern>[Subject] [Adjective]</pattern>
- </example>
+        <example>
+            <english>I went to the store, but they were closed.</english>
+            <response>
+                <state>Setup</state>
+                <vocabulary>
+                    <word>
+                        <japanese>店 (みせ)</japanese>
+                        <romaji>mise</romaji>
+                        <english>store</english>
+                    </word>
+                    <word>
+                        <japanese>行く</japanese>
+                        <romaji>iku</romaji>
+                        <english>to go</english>
+                    </word>
+                    <word>
+                        <japanese>閉まる</japanese>
+                        <romaji>shimaru</romaji>
+                        <english>to be closed</english>
+                    </word>
+                </vocabulary>
+                <sentenceStructure>[Subject] [Location] [Verb-past], [Subject] [Verb-past]</sentenceStructure>
+                <considerations>
+                    <point>This is a compound sentence with contrasting ideas</point>
+                    <point>First part describes a completed action</point>
+                    <point>Second part describes a state in the past</point>
+                    <point>We need a conjunction to show contrast</point>
+                </considerations>
+                <nextSteps>
+                    <step>attempt an answer</step>
+                    <step>ask about past tense formation</step>
+                    <step>ask about connecting contrasting ideas</step>
+                    <step>ask about state description in past tense</step>
+                </nextSteps>
+            </response>
+        </example>
 
- <example>
-   <english>The raven is in the garden.</english>
-   <pattern>[Location] [Subject] [Verb]</pattern>
- </example>
+        <example>
+            <english>Did you eat lunch yesterday?</english>
+            <response>
+                <state>Setup</state>
+                <vocabulary>
+                    <word>
+                        <japanese>昼ご飯 (ひるごはん)</japanese>
+                        <romaji>hirugohan</romaji>
+                        <english>lunch</english>
+                    </word>
+                    <word>
+                        <japanese>食べる</japanese>
+                        <romaji>taberu</romaji>
+                        <english>to eat</english>
+                    </word>
+                    <word>
+                        <japanese>昨日 (きのう)</japanese>
+                        <romaji>kinou</romaji>
+                        <english>yesterday</english>
+                    </word>
+                </vocabulary>
+                <sentenceStructure>[Time] [Object] [Verb-past]?</sentenceStructure>
+                <considerations>
+                    <point>This is a yes/no question about a past action</point>
+                    <point>Time reference typically comes at the beginning</point>
+                    <point>Question marker needed at the end</point>
+                    <point>Past tense is required</point>
+                </considerations>
+                <nextSteps>
+                    <step>attempt an answer</step>
+                    <step>ask about question formation</step>
+                    <step>ask about time expressions</step>
+                    <step>ask about past tense in questions</step>
+                </nextSteps>
+            </response>
+        </example>
+    </examples>
 
- <example>
-   <english>Put the garbage in the garden.</english>
-   <pattern>[Location] [Object] [Verb]</pattern>
- </example>
-
- <example>
-   <english>Did you see the raven?</english>
-   <pattern>[Subject] [Object] [Verb]?</pattern>
- </example>
-
- <example>
-   <english>This morning, I saw the raven.</english>
-   <pattern>[Time] [Subject] [Object] [Verb]</pattern>
- </example>
-
- <example>
-   <english>Are you going?</english>
-   <pattern>[Subject] [Verb]?</pattern>
- </example>
-
- <example>
-   <english>Did you eat the food?</english>
-   <pattern>[Object] [Verb]?</pattern>
- </example>
-
- <example>
-   <english>The raven is looking at the garden.</english>
-   <pattern>[Subject] [Verb] [Location]</pattern>
- </example>
-
- <example>
-   <english>The raven is in the garden, and it is looking at the flowers.</english>
-   <pattern>[Location] [Subject] [Verb], [Object] [Verb]</pattern>
- </example>
-
- <example>
-   <english>I saw the raven because it was loud.</english>
-   <pattern>[Time] [Subject] [Object] [Verb] [Reason] [Subject] [Verb]</pattern>
- </example>
-</sentenceExamples>
+    <commonMistakes>
+        <doNot>
+            <mistake>Show conjugated forms in vocabulary</mistake>
+            <mistake>Provide particles in the table</mistake>
+            <mistake>Give away the answer in clues</mistake>
+            <mistake>Use romaji for sentence structure</mistake>
+        </doNot>
+        <do>
+            <practice>Keep vocabulary in dictionary form</practice>
+            <practice>Let students discover particle usage</practice>
+            <practice>Guide through hints and patterns</practice>
+            <practice>Use Japanese script with furigana</practice>
+        </do>
+    </commonMistakes>
+</teachingExamples>
