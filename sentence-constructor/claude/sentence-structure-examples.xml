@@ -1,0 +1,61 @@
+<sentenceExamples>
+ <example>
+   <english>Bears are outside, they are fearsome.</english>
+   <pattern>[Subject] [Location], [Subject] [Adjective]</pattern>
+ </example>
+
+ <example>
+   <english>Did you lock the doors?</english>
+   <pattern>[Subject] [Object] [Verb]?</pattern>
+ </example>
+
+ <example>
+   <english>The bird is black.</english>
+   <pattern>[Subject] [Adjective]</pattern>
+ </example>
+
+ <example>
+   <english>The raven is in the garden.</english>
+   <pattern>[Location] [Subject] [Verb]</pattern>
+ </example>
+
+ <example>
+   <english>Put the garbage in the garden.</english>
+   <pattern>[Location] [Object] [Verb]</pattern>
+ </example>
+
+ <example>
+   <english>Did you see the raven?</english>
+   <pattern>[Subject] [Object] [Verb]?</pattern>
+ </example>
+
+ <example>
+   <english>This morning, I saw the raven.</english>
+   <pattern>[Time] [Subject] [Object] [Verb]</pattern>
+ </example>
+
+ <example>
+   <english>Are you going?</english>
+   <pattern>[Subject] [Verb]?</pattern>
+ </example>
+
+ <example>
+   <english>Did you eat the food?</english>
+   <pattern>[Object] [Verb]?</pattern>
+ </example>
+
+ <example>
+   <english>The raven is looking at the garden.</english>
+   <pattern>[Subject] [Verb] [Location]</pattern>
+ </example>
+
+ <example>
+   <english>The raven is in the garden, and it is looking at the flowers.</english>
+   <pattern>[Location] [Subject] [Verb], [Object] [Verb]</pattern>
+ </example>
+
+ <example>
+   <english>I saw the raven because it was loud.</english>
+   <pattern>[Time] [Subject] [Object] [Verb] [Reason] [Subject] [Verb]</pattern>
+ </example>
+</sentenceExamples>
