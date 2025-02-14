@@ -1,25 +1,28 @@
-# Backend Server Technical Sepcs
+# Backend Server Technical Specs
 
-## Business Goal: ⬜️
+## Business Goal ✅
 
 A language learning school wants to build a prototype of learning portal which will act as three things:
 - Inventory of possible vocabulary that can be learned
-- Act as a  Learning record store (LRS), providing correct and wrong score on practice vocabulary
+- Act as a Learning record store (LRS), providing correct and wrong score on practice vocabulary
 - A unified launchpad to launch different learning apps
 
-## Technical Requirements ⬜️
+## Technical Requirements ✅
 
-*   Backend: Python FastAPI
-*   Database: SQLite3
+*   Backend: Python FastAPI (v0.109.2)
+*   Python: 3.8+ required
+*   Database: SQLite3 (single file, no concurrent writes needed)
 *   API: Built using FastAPI, returning JSON.
 *   Database Migrations: Handled using Alembic.
 *   Database Seeding: Done via Python scripts.
 *   Authentication/Authorization: None (treated as a single user).
+*   API Responses: All endpoints return JSON with consistent structure
+*   Pagination: Standard format for all paginated responses (100 items per page)
 
-## Directory Structure ⬜️
+## Directory Structure ✅
 
 ```text
-backend_python/
+backend-fastapi/
 ├── app/
 │   ├── main.py        # Main FastAPI application
 │   ├── models.py      # Pydantic models (data structures)
@@ -35,8 +38,9 @@ backend_python/
 ├── seeds/             # Seed data files (JSON)
 ├── requirements.txt # Project dependencies
 └── words.db           # SQLite database file
+```
 
-## Database Schema ⬜️
+## Database Schema ✅
 
 Our database will be a single sqlite database called `words.db` that will be in the root of the project folder of `backend_fastapi`
 
@@ -72,12 +76,8 @@ We have the following tables:
 
 ## API Endpoints ⬜️
 
-### Dashboard Endpoints ⬜️
-- ⬜️ GET /api/dashboard/last_study_session
-- ⬜️ GET /api/dashboard/study_progress
-- ⬜️ GET /api/dashboard/quick-stats
-
-#### GET /api/dashboard/last_study_session
+### Dashboard Feature ✅
+#### GET /api/dashboard/last_study_session ✅
 Returns information about the most recent study session.
 
 ##### JSON Response
@@ -92,7 +92,7 @@ Returns information about the most recent study session.
 }
 ```
 
-#### GET /api/dashboard/study_progress
+#### GET /api/dashboard/study_progress ✅
 Returns study progress statistics.
 Please note that the frontend will determine progress bar basedon total words studied and total available words.
 
@@ -104,7 +104,7 @@ Please note that the frontend will determine progress bar basedon total words st
 }
 ```
 
-#### GET /api/dashboard/quick-stats
+#### GET /api/dashboard/quick-stats ✅
 Returns quick overview statistics.
 
 ##### JSON Response
@@ -117,12 +117,133 @@ Returns quick overview statistics.
 }
 ```
 
-### Study Activities Endpoints ⬜️
-- ⬜️ GET /api/study_activities/:id
-- ⬜️ GET /api/study_activities/:id/study_sessions
-- ⬜️ POST /api/study_activities
+### Words Feature ✅
+#### GET /api/words ✅
+- pagination with 100 items per page
 
-#### GET /api/study_activities/:id
+##### JSON Response
+```json
+{
+  "items": [
+    {
+      "japanese": "こんにちは",
+      "romaji": "konnichiwa",
+      "english": "hello",
+      "correct_count": 5,
+      "wrong_count": 2
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 5,
+    "total_items": 500,
+    "items_per_page": 100
+  }
+}
+```
+
+#### GET /api/words/:id ✅
+##### JSON Response
+```json
+{
+  "japanese": "こんにちは",
+  "romaji": "konnichiwa",
+  "english": "hello",
+  "stats": {
+    "correct_count": 5,
+    "wrong_count": 2
+  },
+  "groups": [
+    {
+      "id": 1,
+      "name": "Basic Greetings"
+    }
+  ]
+}
+```
+
+### Groups Feature ✅
+#### GET /api/groups ✅
+- pagination with 100 items per page
+##### JSON Response
+```json
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Basic Greetings",
+      "word_count": 20
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total_items": 10,
+    "items_per_page": 100
+  }
+}
+```
+
+#### GET /api/groups/:id ✅
+##### JSON Response
+```json
+{
+  "id": 1,
+  "name": "Basic Greetings",
+  "stats": {
+    "total_word_count": 20
+  }
+}
+```
+
+#### GET /api/groups/:id/words ✅
+##### JSON Response
+```json
+{
+  "items": [
+    {
+      "japanese": "こんにちは",
+      "romaji": "konnichiwa",
+      "english": "hello",
+      "correct_count": 5,
+      "wrong_count": 2
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total_items": 20,
+    "items_per_page": 100
+  }
+}
+```
+
+#### GET /api/groups/:id/study_sessions ✅
+##### JSON Response
+```json
+{
+  "items": [
+    {
+      "id": 123,
+      "activity_name": "Vocabulary Quiz",
+      "group_name": "Basic Greetings",
+      "start_time": "2025-02-08T17:20:23-05:00",
+      "end_time": "2025-02-08T17:30:23-05:00",
+      "review_items_count": 20
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total_items": 5,
+    "items_per_page": 100
+  }
+}
+```
+
+### Study Activities Feature ✅
+#### GET /api/study_activities/:id ✅
+
 ##### JSON Response
 ```json
 {
@@ -133,7 +254,7 @@ Returns quick overview statistics.
 }
 ```
 
-#### GET /api/study_activities/:id/study_sessions
+#### GET /api/study_activities/:id/study_sessions ✅
 - pagination with 100 items per page
 
 ##### JSON Response
@@ -158,7 +279,8 @@ Returns quick overview statistics.
 }
 ```
 
-#### POST /api/study_activities
+#### POST /api/study_activities ✅
+
 ##### Request Params
 - group_id integer
 - study_activity_id integer
@@ -171,145 +293,8 @@ Returns quick overview statistics.
 }
 ```
 
-### Words Endpoints ⬜️
-- ⬜️ GET /api/words
-- ⬜️ GET /api/words/:id
-
-#### GET /api/words
-- pagination with 100 items per page
-
-##### JSON Response
-```json
-{
-  "items": [
-    {
-      "japanese": "こんにちは",
-      "romaji": "konnichiwa",
-      "english": "hello",
-      "correct_count": 5,
-      "wrong_count": 2
-    }
-  ],
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 5,
-    "total_items": 500,
-    "items_per_page": 100
-  }
-}
-```
-
-#### GET /api/words/:id
-##### JSON Response
-```json
-{
-  "japanese": "こんにちは",
-  "romaji": "konnichiwa",
-  "english": "hello",
-  "stats": {
-    "correct_count": 5,
-    "wrong_count": 2
-  },
-  "groups": [
-    {
-      "id": 1,
-      "name": "Basic Greetings"
-    }
-  ]
-}
-```
-
-### Groups Endpoints ⬜️
-- ⬜️ GET /api/groups
-- ⬜️ GET /api/groups/:id
-- ⬜️ GET /api/groups/:id/words
-- ⬜️ GET /api/groups/:id/study_sessions
-
-#### GET /api/groups
-- pagination with 100 items per page
-##### JSON Response
-```json
-{
-  "items": [
-    {
-      "id": 1,
-      "name": "Basic Greetings",
-      "word_count": 20
-    }
-  ],
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 1,
-    "total_items": 10,
-    "items_per_page": 100
-  }
-}
-```
-
-#### GET /api/groups/:id
-##### JSON Response
-```json
-{
-  "id": 1,
-  "name": "Basic Greetings",
-  "stats": {
-    "total_word_count": 20
-  }
-}
-```
-
-#### GET /api/groups/:id/words
-##### JSON Response
-```json
-{
-  "items": [
-    {
-      "japanese": "こんにちは",
-      "romaji": "konnichiwa",
-      "english": "hello",
-      "correct_count": 5,
-      "wrong_count": 2
-    }
-  ],
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 1,
-    "total_items": 20,
-    "items_per_page": 100
-  }
-}
-```
-
-#### GET /api/groups/:id/study_sessions
-##### JSON Response
-```json
-{
-  "items": [
-    {
-      "id": 123,
-      "activity_name": "Vocabulary Quiz",
-      "group_name": "Basic Greetings",
-      "start_time": "2025-02-08T17:20:23-05:00",
-      "end_time": "2025-02-08T17:30:23-05:00",
-      "review_items_count": 20
-    }
-  ],
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 1,
-    "total_items": 5,
-    "items_per_page": 100
-  }
-}
-```
-
-### Study Sessions Endpoints ⬜️
-- ⬜️ GET /api/study_sessions
-- ⬜️ GET /api/study_sessions/:id
-- ⬜️ GET /api/study_sessions/:id/words
-- ⬜️ POST /api/study_sessions/:id/words/:word_id/review
-
-#### GET /api/study_sessions
+### Study Sessions Feature ✅
+#### GET /api/study_sessions ✅
 - pagination with 100 items per page
 ##### JSON Response
 ```json
@@ -333,7 +318,7 @@ Returns quick overview statistics.
 }
 ```
 
-#### GET /api/study_sessions/:id
+#### GET /api/study_sessions/:id ✅
 ##### JSON Response
 ```json
 {
@@ -346,7 +331,7 @@ Returns quick overview statistics.
 }
 ```
 
-#### GET /api/study_sessions/:id/words
+#### GET /api/study_sessions/:id/words ✅
 - pagination with 100 items per page
 ##### JSON Response
 ```json
@@ -369,7 +354,7 @@ Returns quick overview statistics.
 }
 ```
 
-#### POST /api/study_sessions/:id/words/:word_id/review
+#### POST /api/study_sessions/:id/words/:word_id/review ✅
 ##### Request Params
 - id (study_session_id) integer
 - word_id integer
@@ -393,11 +378,8 @@ Returns quick overview statistics.
 }
 ```
 
-### System Endpoints ⬜️
-- ⬜️ POST /api/reset_history
-- ⬜️ POST /api/full_reset
-
-#### POST /api/reset_history
+### System Feature ✅
+#### POST /api/reset_history ✅
 ##### JSON Response
 ```json
 {
@@ -406,7 +388,7 @@ Returns quick overview statistics.
 }
 ```
 
-#### POST /api/full_reset
+#### POST /api/full_reset ✅
 ##### JSON Response
 ```json
 {
@@ -419,10 +401,10 @@ Returns quick overview statistics.
 
 Lets list out possible tasks we need for our lang portal.
 
-### Initialize Database ⬜️
-This task will initialize the sqlite database called `words.db
+### Initialize Database ✅
+This task will initialize the sqlite database called `words.db`
 
-### Migrate Database ⬜️
+### Migrate Database ✅
 This task will run a series of migrations sql files on the database
 
 Migrations live in the `migrations` folder.
@@ -434,7 +416,7 @@ The file names should looks like this:
 0002_create_words_table.sql
 ```
 
-### Seed Data ⬜️
+### Seed Data ✅
 This task will import json files and transform them into target data for our database.
 
 All seed files live in the `seeds` folder.

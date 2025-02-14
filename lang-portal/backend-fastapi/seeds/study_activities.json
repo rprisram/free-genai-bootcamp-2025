@@ -1,0 +1,19 @@
+{
+  "activities": [
+    {
+      "name": "Vocabulary Quiz",
+      "thumbnail_url": "https://example.com/quiz.jpg",
+      "description": "Practice your vocabulary with flashcards"
+    },
+    {
+      "name": "Writing Practice",
+      "thumbnail_url": "https://example.com/write.jpg",
+      "description": "Practice writing Japanese characters"
+    },
+    {
+      "name": "Listening Exercise",
+      "thumbnail_url": "https://example.com/listen.jpg",
+      "description": "Improve your listening comprehension"
+    }
+  ]
+} 

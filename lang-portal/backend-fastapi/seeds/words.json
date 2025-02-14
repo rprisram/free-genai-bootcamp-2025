@@ -1,0 +1,28 @@
+{
+  "words": [
+    {
+      "japanese": "こんにちは",
+      "romaji": "konnichiwa",
+      "english": "hello",
+      "groups": ["Basic Greetings", "Common Phrases"]
+    },
+    {
+      "japanese": "さようなら",
+      "romaji": "sayounara",
+      "english": "goodbye",
+      "groups": ["Basic Greetings"]
+    },
+    {
+      "japanese": "ありがとう",
+      "romaji": "arigatou",
+      "english": "thank you",
+      "groups": ["Common Phrases"]
+    },
+    {
+      "japanese": "水",
+      "romaji": "mizu",
+      "english": "water",
+      "groups": ["Basic Nouns"]
+    }
+  ]
+} 

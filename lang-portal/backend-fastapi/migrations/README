@@ -1,0 +1,14 @@
+# Database Migrations
+
+This directory contains database migrations for the Language Learning Portal.
+
+## Structure
+- env.py: Migration environment configuration
+- script.py.mako: Template for migration files
+- versions/: Directory containing migration scripts
+
+## Commands
+- Generate migration: `alembic revision --autogenerate -m "description"`
+- Run migrations: `alembic upgrade head`
+- Rollback: `alembic downgrade -1`
+- Show history: `alembic history` 

@@ -1,0 +1,16 @@
+{
+  "groups": [
+    {
+      "name": "Basic Greetings",
+      "description": "Essential greetings for daily conversation"
+    },
+    {
+      "name": "Common Phrases",
+      "description": "Frequently used Japanese phrases"
+    },
+    {
+      "name": "Basic Nouns",
+      "description": "Common nouns for everyday use"
+    }
+  ]
+} 
