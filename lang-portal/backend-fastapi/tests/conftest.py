@@ -3,6 +3,7 @@ import pytest
 import asyncio
 from typing import AsyncGenerator, Generator
 from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
@@ -31,15 +32,17 @@ TestingSessionLocal = sessionmaker(
 )
 
 @pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    """Create an instance of the default event loop for each test case."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+def event_loop():
+    """Create event loop for tests."""
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
     yield loop
     loop.close()
 
 @pytest.fixture(autouse=True)
-async def setup_db() -> AsyncGenerator:
-    """Create tables before test and drop them after."""
+async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
@@ -47,20 +50,19 @@ async def setup_db() -> AsyncGenerator:
         await conn.run_sync(Base.metadata.drop_all)
 
 @pytest.fixture
-async def db_session() -> AsyncGenerator[AsyncSession, None]:
-    """Get async database session for tests."""
+async def db():
     async with TestingSessionLocal() as session:
-        yield session
+        try:
+            yield session
+        finally:
+            await session.close()
 
 @pytest.fixture
-async def client(db_session: AsyncSession) -> AsyncGenerator[TestClient, None]:
-    """Get test client with overridden dependencies."""
-    async def override_get_db():
-        yield db_session
-
-    app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app) as test_client:
-        yield test_client
+async def client(db):
+    """Get test client."""
+    app.dependency_overrides[get_db] = lambda: db
+    async with AsyncClient(app=app, base_url="http://test", follow_redirects=True) as ac:
+        yield ac
     app.dependency_overrides.clear()
 
 @pytest.fixture
@@ -99,4 +101,17 @@ async def test_study_activity(db_session: AsyncSession):
     db_session.add(activity)
     await db_session.commit()
     await db_session.refresh(activity)
-    return activity 
+    return activity
+
+@pytest.fixture
+async def test_study_session(db_session, test_group, test_study_activity):
+    """Create a test study session."""
+    from app.database.models import StudySession
+    session = StudySession(
+        group_id=test_group.id,
+        study_activity_id=test_study_activity.id
+    )
+    db_session.add(session)
+    await db_session.commit()
+    await db_session.refresh(session)
+    return session 
