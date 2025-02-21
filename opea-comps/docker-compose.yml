@@ -13,7 +13,7 @@ services:
       https_proxy: ${https_proxy}
       LLM_MODEL_ID: ${LLM_MODEL_ID}
       host_ip: ${host_ip}
-
+      TELEMETRY_ENDPOINT: ${TELEMETRY_ENDPOINT}
 networks:
   default:
     driver: bridge
