@@ -1,0 +1,120 @@
+Question: Section 1 Question 1
+Introduction: デパートで男の人と店の人が話しています
+Conversation: 男の人はお手洗いの場所を尋ね、店員が階段の横にあると説明する
+Question: 男の人はどこへ行きますか
+
+Question: Section 1 Question 2
+Introduction: 教室で先生が話しています
+Conversation: 先生がテストのページ構成を説明し、最初に聞く問題から始めるよう指示
+Question: 学生は初めにどのページを開けますか
+
+Question: Section 1 Question 3
+Introduction: 学校で女の学生と男の学生が話しています
+Conversation: 提出先の田中先生の特徴（眼鏡をかけた背の高い男性）について確認
+Question: 女の学生はどの先生のところへ行きますか
+
+Question: Section 1 Question 4
+Introduction: 店で女の人と男の人が話しています
+Conversation: 誕生日プレゼント用のハンカチを選び、犬の柄が描かれたものを選択
+Question: 男の人はどのハンカチを買いますか
+
+Question: Section 1 Question 5
+Introduction: 学校で先生と学生が話しています
+Conversation: スピーチコンテスト用に椅子を横6×縦8に並べるよう指示
+Question: 学生は椅子をどう並べますか
+
+Question: Section 1 Question 6
+Introduction: 病院で病院の人と女の人が話しています
+Conversation: 窓際のソファーで待つよう指示される
+Question: 女の人はどこに座りますか
+
+Question: Section 1 Question 7
+Introduction: 学校で男の学生と学校の人が話しています
+Conversation: 10時からの授業終了後に再度来る約束
+Question: 男の学生は何時頃にもう1度来ますか
+
+Question: Section 2 Question 1
+Introduction: 男の人と女の人が話しています
+Conversation: 誕生日に貰った花から日付（11日）を特定
+Question: 女の人の誕生日はいつですか
+
+Question: Section 2 Question 2
+Introduction: 大学で男の学生と女の学生が話しています
+Conversation: 屋外で昼食を取るため桜公園へ行く決定
+Question: 2人はどこで食べますか
+
+Question: Section 2 Question 3
+Introduction: レストランで女の人と店の人が話しています
+Conversation: 鶏肉料理を注文する過程
+Question: 女の人は何を食べますか
+
+Question: Section 2 Question 4
+Introduction: 大学で男の学生と女の学生が話しています
+Conversation: パーティー参加者の人数確認（先生2名参加）
+Question: 明日のパーティーに先生は何人来ますか
+
+Question: Section 2 Question 5
+Introduction: 男の人と女の人が話しています
+Conversation: レポート締切変更により映画に行く計画
+Question: 明日の午後女の人はどこへ行きますか
+
+Question: Section 2 Question 6
+Introduction: パーティーで男の人と女の人が話しています
+Conversation: 温かいお茶を注文する選択
+Question: 女の人は何を飲みますか
+
+Question: Section 3 Question 1
+Introduction: 寝ます他の人に何と言いますか
+Conversation: 
+Question: 適切な挨拶を選択（おやすみなさい）
+
+Question: Section 3 Question 2
+Introduction: 学校へ出かけます家族に何と言いますか
+Conversation: 
+Question: 適切な挨拶を選択（行ってきます）
+
+Question: Section 3 Question 3
+Introduction: 電車に乗ります東京まで何分で行くか聞きたい
+Conversation: 
+Question: 適切な質問表現を選択（どのぐらいかかりますか）
+
+Question: Section 3 Question 4
+Introduction: タクシーの中ですどこへ行きたいか言います
+Conversation: 
+Question: 適切な表現を選択（近くの駅までお願いします）
+
+Question: Section 3 Question 5
+Introduction: 喫茶店にいますコーヒーを飲みたい
+Conversation: 
+Question: 適切な注文表現を選択（コーヒーを願します）
+
+Question: Section 4 Question 1
+Introduction: あの方はどなたですか
+Conversation: 
+Question: 正解選択（山田先生です）
+
+Question: Section 4 Question 2
+Introduction: お父さんはおいくつですか
+Conversation: 
+Question: 正解選択（50歳です）
+
+Question: Section 4 Question 3
+Introduction: 日本料理は何が好きですか
+Conversation: 
+Question: 正解選択（天ぷらが好きです）
+
+Question: Section 4 Question 4
+Introduction: 窓を開けましょうか
+Conversation: 
+Question: 正解選択（ええお願いします）
+
+Question: Section 4 Question 5
+Introduction: オレンジジュースをお願いします
+Conversation: 
+Question: 正解選択（かしこまりました）
+
+Question: Section 4 Question 6
+Introduction: 会社まで何で行きますか
+Conversation: 
+Question: 正解選択（バスで行きます）
+
