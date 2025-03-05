@@ -20,32 +20,33 @@ class QuestionGenerator:
         if not self.perplexity_api_key:
             raise ValueError("Perplexity API key is required. Please set PERPLEXITY_API_KEY in your .env file.")
     
-    def generate_questions(self, context: str, count: int = 2, level: str = "N3", topic: str = "conversation") -> List[Dict[str, str]]:
-        """Generate JLPT listening practice questions
+    def generate_questions(self, context: str, count: int = 3, level: str = "N3", topic: str = "general conversation") -> List[Dict[str, str]]:
+        """Generate questions based on context
         
         Args:
-            context (str): Context for the questions
-            count (int, optional): Number of questions to generate. Defaults to 2.
-            level (str, optional): JLPT level. Defaults to "N3".
-            topic (str, optional): Topic for the questions. Defaults to "conversation".
+            context (str): Context for generating questions
+            count (int): Number of questions to generate
+            level (str): JLPT level (N1-N5)
+            topic (str): Topic for questions
             
         Returns:
             List[Dict[str, str]]: List of generated questions
         """
+        # Create a prompt for the model
         prompt = f"""
-        Generate {count} JLPT {level} listening practice questions based on the following context:
+        Based on the following Japanese conversation context, generate {count} JLPT level {level} listening comprehension questions about {topic}.
         
+        Context:
         {context}
         
-        The questions should be about {topic}.
-        
         For each question, provide:
-        1. A question number (e.g., "Section 1 Question 1")
-        2. An introduction (e.g., "レストランで男の人と店の人が話しています")
-        3. A conversation (the actual dialogue)
-        4. A question (e.g., "男の人は何を注文しましたか？")
+        1. A question number
+        2. An introduction setting the scene
+        3. A conversation (can be based on or inspired by the context)
+        4. A clear question in Japanese
+        5. The correct answer to the question
         
-        Format your response as a JSON object with a 'questions' array. Each question should have 'number', 'introduction', 'conversation', and 'question' fields.
+        Format your response as a JSON object with a 'questions' array. Each question should have 'number', 'introduction', 'conversation', 'question', and 'answer' fields.
         """
         
         return self._generate_with_perplexity(prompt)
@@ -63,7 +64,7 @@ class QuestionGenerator:
             # Add explicit instructions to format the response as JSON
             json_prompt = f"""{prompt}
 
-IMPORTANT: Format your response as a valid JSON object with a 'questions' array. Each question should have 'number', 'introduction', 'conversation', and 'question' fields. Do not include any explanations or additional text outside the JSON object."""
+IMPORTANT: Format your response as a valid JSON object with a 'questions' array. Each question should have 'number', 'introduction', 'conversation', 'question', and 'answer' fields. Do not include any explanations or additional text outside the JSON object."""
             
             response = requests.post(
                 "https://api.perplexity.ai/chat/completions",
@@ -130,7 +131,8 @@ IMPORTANT: Format your response as a valid JSON object with a 'questions' array.
                     "number": "Generated Question 1",
                     "introduction": "Restaurant conversation",
                     "conversation": content[:200] if len(content) > 200 else content,
-                    "question": "What was discussed in the conversation?"
+                    "question": "What was discussed in the conversation?",
+                    "answer": "Unknown"
                 }
                 return [manual_question]
                 
@@ -150,9 +152,9 @@ def main():
     
     parser = argparse.ArgumentParser(description="JLPT Question Generator")
     parser.add_argument("--context", required=True, help="Context for generating questions")
-    parser.add_argument("--count", type=int, default=2, help="Number of questions to generate")
+    parser.add_argument("--count", type=int, default=3, help="Number of questions to generate")
     parser.add_argument("--level", default="N3", help="JLPT level (N1, N2, N3, N4, N5)")
-    parser.add_argument("--topic", default="conversation", help="Topic for the questions")
+    parser.add_argument("--topic", default="general conversation", help="Topic for the questions")
     parser.add_argument("--output", help="Output file to save generated questions")
     
     args = parser.parse_args()
@@ -180,6 +182,7 @@ def main():
                     f.write(f"Introduction: {q.get('introduction', '')}\n")
                     f.write(f"Conversation: {q.get('conversation', '')}\n")
                     f.write(f"Question: {q.get('question', '')}\n")
+                    f.write(f"Answer: {q.get('answer', '')}\n")
                     f.write("\n")
             print(f"Saved questions to {args.output}")
         else:
@@ -190,6 +193,7 @@ def main():
                 print(f"Introduction: {q.get('introduction', '')}")
                 print(f"Conversation: {q.get('conversation', '')}")
                 print(f"Question: {q.get('question', '')}")
+                print(f"Answer: {q.get('answer', '')}")
     else:
         print("Failed to generate questions")
 

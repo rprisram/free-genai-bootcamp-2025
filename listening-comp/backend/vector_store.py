@@ -2,7 +2,7 @@ import os
 import json
 import re
 import numpy as np
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 from pathlib import Path
 import chromadb
 import requests
@@ -117,14 +117,21 @@ class VectorStore:
             persist_directory (str): Directory to persist the vector store
             perplexity_api_key (Optional[str]): Perplexity API key
         """
-        self.persist_directory = persist_directory
-        self.transcripts_directory = "./backend/transcripts"
+        # Convert relative paths to absolute paths
+        self.persist_directory = os.path.abspath(persist_directory)
         
-        # Create persist directory if it doesn't exist
-        os.makedirs(persist_directory, exist_ok=True)
+        # Get absolute path to transcripts directory relative to this file
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.transcripts_directory = os.path.join(current_dir, "transcripts")
         
-        # Initialize ChromaDB client
-        self.client = chromadb.PersistentClient(path=persist_directory)
+        # Initialize ChromaDB client with persist directory
+        if os.path.exists(self.persist_directory):
+            print(f"Using existing ChromaDB at: {self.persist_directory}")
+            self.client = chromadb.PersistentClient(path=self.persist_directory)
+        else:
+            print(f"No existing ChromaDB found at: {self.persist_directory}")
+            self.client = None
+            return
         
         # Use Perplexity embeddings
         self.perplexity_api_key = perplexity_api_key or os.getenv("PERPLEXITY_API_KEY")
@@ -132,15 +139,28 @@ class VectorStore:
             raise ValueError("Perplexity API key is required for the vector store")
         
         self.embedding_function = PerplexityEmbeddingFunction(api_key=self.perplexity_api_key)
-    
-    def initialize(self):
-        """Initialize the vector store collection"""
-        # Create or get collection
-        self.collection = self.client.get_or_create_collection(
-            name="jlpt_questions",
-            embedding_function=self.embedding_function,
-            metadata={"description": "JLPT listening practice questions"}
-        )
+        self._questions_loaded = False
+        
+    def initialize(self, load_questions: bool = False):
+        """Initialize the vector store collection
+        
+        Args:
+            load_questions (bool): Whether to load questions from the transcripts directory
+        """
+        if not self.client:
+            raise ValueError("ChromaDB client not initialized. No existing database found.")
+            
+        try:
+            # Try to get existing collection first
+            self.collection = self.client.get_collection(
+                name="jlpt_questions",
+                embedding_function=self.embedding_function
+            )
+            print("Using existing collection with embeddings from first run")
+            self._questions_loaded = True
+        except ValueError:
+            print("No existing collection found")
+            return
     
     def add_question(self, question: Dict[str, str], source: str) -> str:
         """Add a single question to the vector store
@@ -247,36 +267,69 @@ class VectorStore:
         """
         return self.collection.count()
     
-    def load_questions_from_folder(self, directory_path: Path) -> int:
-        """Load all structured.txt files from the given folder
+    def get_collection_info(self) -> Dict[str, Any]:
+        """Get information about the current collection
+        
+        Returns:
+            Dict[str, Any]: Collection information including count and metadata
+        """
+        if not hasattr(self, 'collection') or not self.collection:
+            return {"count": 0, "metadata": None}
+            
+        try:
+            count = self.collection.count()
+            metadata = self.collection.metadata
+            return {
+                "count": count,
+                "metadata": metadata
+            }
+        except Exception as e:
+            print(f"Error getting collection info: {str(e)}")
+            return {"count": 0, "metadata": None}
+    
+    def load_questions_from_folder(self, folder_path: Union[str, Path]) -> int:
+        """Load questions from all transcript files in a folder
         
         Args:
-            directory_path (Path): Path to directory containing structured transcript files
+            folder_path (Union[str, Path]): Path to folder containing transcript files
             
         Returns:
             int: Number of questions loaded
         """
-        if not directory_path.exists():
-            print(f"Transcripts directory not found: {directory_path}")
-            return 0
+        folder_path = Path(folder_path)
+        count = 0
         
-        total_questions = 0
+        # Check if collection already has questions
+        try:
+            existing_count = self.collection.count()
+            if existing_count > 0:
+                print(f"Collection already contains {existing_count} questions")
+                return existing_count
+        except Exception as e:
+            print(f"Error checking collection count: {str(e)}")
+            pass
         
-        # Find all structured.txt files
-        structured_files = list(directory_path.glob("*.structured.txt"))
+        # Only proceed with loading if collection is empty
+        for file_path in folder_path.glob("*.txt"):
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    questions = self._parse_transcript(content)
+                    for question in questions:
+                        self.add_question(question, str(file_path))
+                        count += 1
+                        print(f"Parsed question: {question.get('question', 'Unknown')}")
+            except Exception as e:
+                print(f"Error processing file {file_path}: {str(e)}")
+                continue
         
-        for file_path in structured_files:
-            questions = self._parse_structured_file(str(file_path))
-            if questions:
-                total_questions += self.add_questions(questions, file_path.name)
-        
-        return total_questions
+        return count
     
-    def _parse_structured_file(self, file_path: str) -> List[Dict[str, str]]:
-        """Parse a structured transcript file into questions
+    def _parse_transcript(self, content: str) -> List[Dict[str, str]]:
+        """Parse a transcript into questions
         
         Args:
-            file_path (str): Path to structured transcript file
+            content (str): Transcript content
             
         Returns:
             List[Dict[str, str]]: List of questions with their components
@@ -285,64 +338,54 @@ class VectorStore:
         current_question = {}
         current_section = None
         
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-                
-                for line in lines:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    
-                    # Check if this is a question number line
-                    if line.startswith('Question:'):
-                        # Save the previous question if it exists
-                        if current_question and current_question.get('question_number'):
-                            questions.append(current_question)
-                        
-                        # Start a new question
-                        question_number = line.replace('Question:', '').strip()
-                        current_question = {
-                            "question_number": question_number,
-                            "introduction": "",
-                            "conversation": "",
-                            "question": ""
-                        }
-                        current_section = None
-                    
-                    # Check for section markers
-                    elif line.startswith('Introduction:'):
-                        current_section = "introduction"
-                        content = line.replace('Introduction:', '').strip()
-                        if content:  # If there's content on the same line
-                            current_question["introduction"] = content
-                    
-                    elif line.startswith('Conversation:'):
-                        current_section = "conversation"
-                        content = line.replace('Conversation:', '').strip()
-                        if content:  # If there's content on the same line
-                            current_question["conversation"] = content
-                    
-                    # Add content to the current section
-                    elif current_section and current_question:
-                        if current_question[current_section]:
-                            current_question[current_section] += " " + line
-                        else:
-                            current_question[current_section] = line
-                
-                # Add the last question
+        lines = content.splitlines()
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Check if this is a question number line
+            if line.startswith('Question:'):
+                # Save the previous question if it exists
                 if current_question and current_question.get('question_number'):
                     questions.append(current_question)
+                
+                # Start a new question
+                question_number = line.replace('Question:', '').strip()
+                current_question = {
+                    "question_number": question_number,
+                    "introduction": "",
+                    "conversation": "",
+                    "question": ""
+                }
+                current_section = None
             
-            # Print summary of parsed questions
-            for q in questions:
-                print(f"Parsed question: {q['question_number']}")
+            # Check for section markers
+            elif line.startswith('Introduction:'):
+                current_section = "introduction"
+                content = line.replace('Introduction:', '').strip()
+                if content:  # If there's content on the same line
+                    current_question["introduction"] = content
             
-            return questions
+            elif line.startswith('Conversation:'):
+                current_section = "conversation"
+                content = line.replace('Conversation:', '').strip()
+                if content:  # If there's content on the same line
+                    current_question["conversation"] = content
+            
+            # Add content to the current section
+            elif current_section and current_question:
+                if current_question[current_section]:
+                    current_question[current_section] += " " + line
+                else:
+                    current_question[current_section] = line
         
-        except Exception as e:
-            print(f"Error parsing structured file {file_path}: {str(e)}")
-            return []
+        # Add the last question
+        if current_question and current_question.get('question_number'):
+            questions.append(current_question)
+        
+        return questions
 
 
 def main():
@@ -358,7 +401,7 @@ def main():
     # Initialize vector store
     try:
         vector_store = VectorStore()
-        vector_store.initialize()
+        vector_store.initialize(load_questions=True)
         
         # Load questions based on arguments
         if args.import_dir:

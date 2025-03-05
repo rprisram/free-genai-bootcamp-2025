@@ -42,3 +42,42 @@ This structure:
 ## KnowledgeBase
 
 https://github.com/chroma-core/chroma
+
+## Interactive Learning Feature
+
+The application now includes an interactive learning feature that uses vector search and RAG (Retrieval Augmented Generation) to create a dynamic, context-aware language learning experience.
+
+### Features
+
+- **Topic-Based Learning**: Select from various Japanese language topics to practice
+- **Vector Search**: Uses semantic search to find relevant questions based on your selected topic
+- **Dynamic Question Generation**: Creates new questions based on retrieved content
+- **Multiple-Choice Format**: Practice with interactive multiple-choice questions
+- **Immediate Feedback**: Get instant feedback on your answers
+
+### How to Use
+
+1. Run the Streamlit app: `streamlit run frontend/main.py`
+2. Navigate to the "Interactive Learning" tab
+3. Select a topic from the dropdown menu
+4. Click "Generate Questions" to create practice questions
+5. Answer the multiple-choice questions and receive immediate feedback
+
+### Technical Implementation
+
+- Uses ChromaDB for vector storage and semantic search
+- Leverages Perplexity API for embeddings and question generation
+- Implements RAG techniques to generate contextually relevant questions
+- Stores vector embeddings in a persistent ChromaDB database
+
+### Requirements
+
+- Perplexity API key (stored in `.env` file)
+- Python packages: streamlit, chromadb, perplexity, python-dotenv
+
+### Future Enhancements
+
+- Audio playback integration
+- Expanded topic coverage
+- User progress tracking
+- Difficulty level progression

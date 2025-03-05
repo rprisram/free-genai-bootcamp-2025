@@ -1,4 +1,5 @@
-chromadb==0.4.18
+chromadb==0.4.22
+numpy<2.0.0
 streamlit
 boto3
 youtube_transcript_api
