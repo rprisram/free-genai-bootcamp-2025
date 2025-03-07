@@ -6,8 +6,8 @@ def init_db():
     """Initialize the SQLite database"""
     # Get the root directory
     root_dir = Path(__file__).parent.parent
-    db_path = root_dir / 'words.db'
-    
+    db_path = root_dir /'words.db'
+    print(db_path)
     try:
         # Create database file if it doesn't exist
         conn = sqlite3.connect(db_path)

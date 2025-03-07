@@ -139,7 +139,7 @@ export const fetchWords = async (
   order: 'asc' | 'desc' = 'asc'
 ): Promise<WordsResponse> => {
   const response = await fetch(
-    `${API_BASE_URL}/words?page=${page}&sort_by=${sortBy}&order=${order}`
+    `${API_BASE_URL}/api/words?page=${page}&sort_by=${sortBy}&order=${order}`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch words');
@@ -148,7 +148,7 @@ export const fetchWords = async (
 };
 
 export const fetchWordDetails = async (wordId: number): Promise<Word> => {
-  const response = await fetch(`${API_BASE_URL}/words/${wordId}`);
+  const response = await fetch(`${API_BASE_URL}/api/words/${wordId}`);
   if (!response.ok) {
     throw new Error('Failed to fetch word details');
   }

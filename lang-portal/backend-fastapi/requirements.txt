@@ -25,3 +25,7 @@ black==24.1.1
 pytest==7.4.4
 pytest-asyncio==0.23.5
 httpx==0.26.0 
+attribute-dict==1.0.0
+lexicon==2.0.1
+invoke==1.6.0
+PyYAML==6.0.2

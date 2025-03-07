@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
+from typing import List
 from ..db import get_db
 from ..database.models import StudyActivity, StudySession, Group, WordReviewItem
 from ..models import (
@@ -34,6 +35,18 @@ async def get_activity(activity_id: int, db: AsyncSession = Depends(get_db)):
         thumbnail_url=activity.thumbnail_url,
         description=activity.description
     )
+
+@router.get("", response_model=List[StudyActivityDetail])
+async def get_all_activities(db: AsyncSession = Depends(get_db)):
+    query = select(StudyActivity)
+    result = await db.execute(query)
+    activities = result.scalars().all()
+    return [StudyActivityDetail(
+        id=activity.id,
+        name=activity.name,
+        thumbnail_url=activity.thumbnail_url,
+        description=activity.description
+    ) for activity in activities]
 
 @router.get("/{activity_id}/study_sessions", response_model=StudySessionListResponse)
 async def get_activity_sessions(

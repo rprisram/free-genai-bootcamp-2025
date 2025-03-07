@@ -254,6 +254,32 @@ Returns quick overview statistics.
 }
 ```
 
+#### GET /api/study_activities ✅
+
+##### JSON Response
+```json
+[
+  {
+    "id": 1,
+    "name": "Vocabulary Quiz",
+    "thumbnail_url": "https://example.com/thumbnail.jpg",
+    "description": "Practice your vocabulary with flashcards"
+  },
+  {
+    "id": 2,
+    "name": "Listening Exercise",
+    "thumbnail_url": "https://example.com/listen.jpg",
+    "description": "Improve your listening comprehension"
+  },
+  {
+    "id": 3,
+    "name": "Writing Practice",
+    "thumbnail_url": "https://example.com/write.jpg",
+    "description": "Practice writing Japanese characters"
+  }
+]
+```
+
 #### GET /api/study_activities/:id/study_sessions ✅
 - pagination with 100 items per page
 
