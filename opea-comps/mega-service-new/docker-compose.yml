@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  megaservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mega-service
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_SERVICE_HOST_IP=localhost
+      - LLM_SERVICE_PORT=8080
+      - OTEL_TRACES_EXPORTER=none
+    volumes:
+      - .:/app
+    command: python chat.py
+    networks:
+      - mega-network
+
+networks:
+  mega-network:
+    driver: bridge
