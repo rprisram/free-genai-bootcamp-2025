@@ -1,7 +1,12 @@
 from comps import ServiceOrchestrator,MicroService,ServiceRoleType,ServiceType
 from comps.cores.proto.api_protocol import ChatCompletionRequest, ChatCompletionResponse, ChatMessage, UsageInfo, ChatCompletionResponseChoice
 from fastapi import HTTPException
-from fastapi import requests
+import requests
+from jinja2 import Environment, FileSystemLoader
+import os
+LLM_SERVICE_HOST_IP = os.getenv("LLM_SERVICE_HOST_IP", "vllm-service")
+LLM_SERVICE_PORT = os.getenv("LLM_SERVICE_PORT", 8000)
+
 class Chat:
     def __init__(self, host="0.0.0.0", port=8000): 
         self.host = host
@@ -33,36 +38,56 @@ class Chat:
         #   use_remote_service=True,
         #   service_type=ServiceType.EMBEDDING,
         #)
-      # llm = MicroService(
-      #     name="llm",
-      #     host=LLM_SERVICE_HOST_IP,
-      #     port=LLM_SERVICE_PORT,
-      #     endpoint="/v1/chat/completions",
-      #     use_remote_service=True,
-      #     service_type=ServiceType.LLM,
-      # )
+        llm = MicroService(
+            name="llm",
+            host=LLM_SERVICE_HOST_IP,
+            port=LLM_SERVICE_PORT,
+            endpoint="/v1/chat/completions",
+            use_remote_service=True,
+            service_type=ServiceType.LLM
+        )
         #self.megaservice.add(embedding).add(llm)
         #self.megaservice.flow_to(embedding, llm)
-       # self.megaservice.add(llm)
+        self.megaservice.add(llm)
         #self.megaservice.flow_to(llm)
     
     async def handle_request(self, request: ChatCompletionRequest) -> ChatCompletionResponse:
             try:
-                # Format the request for Ollama
+                env = Environment(loader=FileSystemLoader('.'))
+                template = env.get_template('chat-template.jinja')
+
+                # Prepare messages, ensuring a system message is present
+                messages = request.messages
+                print("messages", messages)
+                if not messages or len(messages) == 0:
+                    raise HTTPException(status_code=400, detail="'messages' field is required and cannot be empty")
+                
+                # Each message should have 'role' and 'content' fields
+                for msg in messages:
+                    if 'role' not in msg or 'content' not in msg:
+                        raise HTTPException(status_code=400, detail="Each message must contain 'role' and 'content' fields")
+                print("before appending messages", messages)
+                if not any(msg['role'] == 'system' for msg in messages):
+                    messages.insert(0, {"role": "system", "content": "You are an AI Expert"})
+                print("after appending messages", messages)
+                # Format each message using the template
+                #formatted_messages = [
+                #    {"role": msg['role'], "content": template.render(content=msg['content'])}
+                #    for msg in messages
+                #]
+                #print("After formatting messages", formatted_messages)
                 ollama_request = {
-                    "model": request.model or "llama3.2:1b",  # or whatever default model you're using
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": request.messages  # assuming messages is a string
-                        }
-                    ],
-                    "stream": False  # disable streaming for now
+                    "model": request.model or "SmolLM2-360M",
+                    "messages": messages, #formatted_messages,
+                    "stream": False,
+                    "temperature": 0.7,
+                    "max_tokens": 256
                 }
-                
+
+                print("ollama_request", ollama_request)
                 # Schedule the request through the orchestrator
-                result = await self.megaservice.schedule(ollama_request)
-                
+                result = await self.megaservice.schedule(ollama_request, timeout=600) # Request got aborted
+                print("Result", result)
                 # Extract the actual content from the response
                 if isinstance(result, tuple) and len(result) > 0:
                     llm_response = result[0].get('llm/MicroService')
@@ -80,8 +105,7 @@ class Chat:
                 # Create the response
                 response = ChatCompletionResponse(
                     model=request.model or "example-model",
-                    choices=[
-                        ChatCompletionResponseChoice(
+                    choices=[ChatCompletionResponseChoice(
                             index=0,
                             message=ChatMessage(
                                 role="assistant",

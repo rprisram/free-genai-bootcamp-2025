@@ -1,0 +1,19 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    cmake \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV VLLM_TARGET_DEVICE=cpu
+ENV VLLM_USE_CPU_ONLY=1
+
+RUN pip install --no-cache-dir "vllm[cpu]"
+
+EXPOSE 8000
+
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", "--model", "llama3.2:1b", "--device", "cpu"]

@@ -1,0 +1,11 @@
+curl -X POST http://0.0.0.0:8001/v1/chat-service \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.2-1b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me about artificial intelligence"
+      }
+    ]
+  }'

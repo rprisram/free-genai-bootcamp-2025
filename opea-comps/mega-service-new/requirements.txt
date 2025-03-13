@@ -1,3 +1,7 @@
 opea-comps
 fastapi
 uvicorn
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+jinja2
