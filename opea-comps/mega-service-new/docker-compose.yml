@@ -5,16 +5,108 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mega-service
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
-      - LLM_SERVICE_HOST_IP=localhost
-      - LLM_SERVICE_PORT=8080
+      - LLM_SERVICE_HOST_IP=vllm-service
+      - LLM_SERVICE_PORT=8000
       - OTEL_TRACES_EXPORTER=none
     volumes:
       - .:/app
     command: python chat.py
+    ipc: host
+    depends_on:
+      vllm-service:
+        condition: service_healthy
+    networks:
+      - mega-network
+
+  vllm-service:
+    #image: https://github.com/vllm-project/vllm-openai:latest
+    build:
+      context: ./vllm 
+      dockerfile: Dockerfile.arm
+    platform: linux/arm64
+    deploy:
+      resources:
+        limits:
+          cpus: 2       # Limit to 2 CPU cores
+          memory: 8G    # Limit to 8GB memory
+        reservations:
+          cpus: 1       # Reserve at least 1 CPU core
+          memory: 4G    # Reserve at least 4GB memory
+    #deploy: #Din work
+    #  resources:
+    #    reservations:
+    #      devices:
+    #        - driver: nvidia
+    #          count: 1
+    #          capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_NAME=SmolLM2-360M
+      - MODEL_PATH=/models/SmolLM2-360M
+      - VLLM_USE_CPU_ONLY=1
+      - VLLM_DEVICE=cpu
+      - VLLM_LOGGING_LEVEL=DEBUG
+      - VLLM_TRACE_FUNCTION=1
+      - VLLM_CPU_KVCACHE_SPACE=8  # 4GB KV cache space
+      #- VLLM_CPU_KVCACHE_SPACE=262144 #he model requires significant memory, so we need to increase the KV cache space
+    #command: >
+    #  python -m vllm.entrypoints.openai.api_server 
+    #    --model llama3.2-1b 
+    #    --host 0.0.0.0 
+    #    --port 8000 
+    #    --served-model-name llama3.2-1b 
+    #    --model-path /models/llama3.2-1b 
+    #    --device cpu 
+    #    --logging-level DEBUG
+
+    #command:
+    #  - "python" #already defined in Dockerfile.arm as ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"] 
+    #  - "-m" #already defined in Dockerfile.arm as ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"] 
+    #  - "vllm.entrypoints.api_server" #already defined in Dockerfile.arm as ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"] 
+    #  - "--model"
+    #  - "/models/llama3.2-1b"
+    #  - "--device"
+    #  - "cpu"
+    #  - "--host"
+    #  - "0.0.0.0"
+    #  - "--port"
+    #  - "8000"
+    command:
+      - "--model"
+      - "/models/SmolLM2-360M"
+      - "--device"
+      - "cpu"
+      #- "cuda" #din work
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8000"
+      - "--chat-template"
+      - "/chat-template.jinja"
+      - "--chat-template-content-format"
+      - "string"  # or "string" depending on your needs
+      - "--dtype"
+      - "float32"  # Use float32 instead of bfloat16
+      - "--max-model-len" #model's maximum sequence length (131072 tokens) exceeds the available KV cache capacity (65536 tokens).
+      - "8192" 
+      - "--tensor-parallel-size"
+      - "1"
+      - "--distributed-executor-backend"
+      - "mp"  # Use multiprocessing backend
+    volumes:
+      #- ./models:/models
+      - ./models/SmolLM2-360M:/models/SmolLM2-360M
+      - ./chat-template.jinja:/chat-template.jinja
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s  # Increase this value to allow more startup time
     networks:
       - mega-network
 
