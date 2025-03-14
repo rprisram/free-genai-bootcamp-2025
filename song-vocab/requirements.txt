@@ -1,0 +1,10 @@
+fastapi==0.110.0
+uvicorn==0.27.1
+instructor==0.5.2
+pydantic==2.6.1
+httpx==0.25.2
+duckduckgo-search==4.4.1
+beautifulsoup4==4.12.2
+ollama==0.1.5
+openai==1.5.0
+
