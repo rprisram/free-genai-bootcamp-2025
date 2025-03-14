@@ -1,0 +1,3 @@
+curl -X POST http://localhost:8000/api/agent \
+-H "Content-Type: application/json" \
+-d '{"message_request": "Bohemian Rhapsody by Queen", "lyrics_language": "spanish", "vocabulary_language": "english"}'
